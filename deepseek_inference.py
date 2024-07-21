@@ -22,7 +22,7 @@ class CodeGen:
         self.model_name = model_name
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
-        self.tokenizer.add_special_tokens({'pad_token': self.tokenizer.eos_token})
+        # self.tokenizer.add_special_tokens({'pad_token': self.tokenizer.eos_token})
         self.model.cuda()
         self.batch_size = batch_size
         print('done loading model')
@@ -83,8 +83,8 @@ class CodeGen:
 
 
 if __name__ == '__main__':
-    file_path = 'hinny-rg-one-gram-ws-20-ss-2.jsonl'
+    file_path = 'hinny-rg-one-gram-ws-20-ss-2-fix-fpath.jsonl'
     tiny_codegen = 'deepseek-ai/deepseek-coder-6.7b-base'
 
-    cg = CodeGen(tiny_codegen, batch_size=8)
+    cg = CodeGen(tiny_codegen, batch_size=1)
     cg.batch_generate(file_path)
