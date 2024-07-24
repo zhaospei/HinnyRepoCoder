@@ -24,10 +24,10 @@ class Tools:
 class CodeGen:
     def __init__(self, model_name, batch_size):
         self.model_name = model_name
-        self.model = AutoModelForCausalLM.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left")
+        self.model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, torch_dtype=torch.bfloat16, device_map='auto').cuda()
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True, padding_side="left")
         # self.tokenizer.add_special_tokens({'pad_token': self.tokenizer.eos_token})
-        self.model.cuda()
+        # self.model.cuda()
         self.batch_size = batch_size
         print('done loading model')
 
@@ -91,7 +91,7 @@ class CodeGen:
 
 
 if __name__ == '__main__':
-    file_path = 'prompt_hinny_function_level_completion_with_return_types.jsonl'
+    file_path = 'prompt_full_context_hinny_function_level_completion_with_return_types.jsonl'
     tiny_codegen = 'deepseek-ai/deepseek-coder-6.7b-base'
 
     cg = CodeGen(tiny_codegen, batch_size=1)
