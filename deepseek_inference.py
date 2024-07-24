@@ -83,7 +83,7 @@ class CodeGen:
 
 
 if __name__ == '__main__':
-    file_path = 'hinny-gt-one-gram-ws-20-ss-2-fix-fpath.jsonl'
+    file_path = 'prompt_hinny_function_level_completion_with_return_types.jsonl'
     tiny_codegen = 'deepseek-ai/deepseek-coder-6.7b-base'
 
     cg = CodeGen(tiny_codegen, batch_size=1)
