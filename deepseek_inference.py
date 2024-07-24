@@ -4,6 +4,10 @@ import json
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
+BEGIN_TOKEN = "<｜fim▁begin｜>"
+FILL_TOKEN = "<｜fim▁hole｜>"
+END_TOKEN = "<｜fim▁end｜>"
+
 class Tools:
     @staticmethod
     def load_jsonl(path):
@@ -34,7 +38,7 @@ class CodeGen:
         return batches
 
     def _generate_batch(self, prompt_batch, max_new_tokens=400):
-        prompts = self.tokenizer(prompt_batch, return_tensors='pt', padding=True, truncation=True)
+        prompts = self.tokenizer(prompt_batch, return_tensors='pt', padding=True, truncation=True).to("cuda")
         
         # for prompt in prompts['input_ids']:
         #     print(prompt)
@@ -42,14 +46,16 @@ class CodeGen:
         #     if len(prompt) > 2048:
         #         print('prompt too long, truncating')
         
-        with torch.no_grad():
-            gen_tokens = self.model.generate(
-                input_ids = prompts['input_ids'].cuda(),
-                attention_mask = prompts['attention_mask'].cuda(),
-                do_sample=False,
-                max_new_tokens=max_new_tokens,
-                # max_length = 2048,
-            )
+        # with torch.no_grad():
+            
+        gen_tokens = self.model.generate(**prompts, max_new_tokens=max_new_tokens, do_sample=False)
+        # gen_tokens = self.model.generate(
+        #     input_ids = prompts['input_ids'].cuda(),
+        #     attention_mask = prompts['attention_mask'].cuda(),
+        #     do_sample=False,
+        #     max_new_tokens=max_new_tokens,
+        #     # max_length = 2048,
+        # )
         gen_text = self.tokenizer.batch_decode(gen_tokens, skip_special_tokens=True)
         for i in range(len(gen_text)):  # remove the prompt
             gen_text[i] = gen_text[i][len(prompt_batch[i]):]
@@ -65,6 +71,8 @@ class CodeGen:
         lines = Tools.load_jsonl(file)
         # have a new line at the end
         prompts = [f"{line['prompt']}\n" for line in lines]
+        # prompts = [BEGIN_TOKEN + line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + \
+        #         '\n' + FILL_TOKEN + '\n' + line['prompt'].split('<FILL_FUNCTION_BODY>')[1] + END_TOKEN for line in lines]
         print(prompts[0])
         batches = self._get_batchs(prompts, self.batch_size)
         gen_text = []
