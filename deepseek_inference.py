@@ -38,7 +38,7 @@ class CodeGen:
         return batches
 
     def _generate_batch(self, prompt_batch, max_new_tokens=400):
-        prompts = self.tokenizer(prompt_batch, return_tensors='pt', truncation=True, max_length=10000, ).to("cuda")
+        prompts = self.tokenizer(prompt_batch, return_tensors='pt', truncation=True, ).to("cuda")
         print(prompts['input_ids'].size()[1])
         
         # for prompt in prompts['input_ids']:
