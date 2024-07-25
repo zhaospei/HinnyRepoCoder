@@ -70,10 +70,10 @@ class CodeGen:
         print(f'generating from {file}')
         lines = Tools.load_jsonl(file)
         # have a new line at the end
-        prompts = [f"{line['prompt']}\n" for line in lines]
-        # prompts = [BEGIN_TOKEN + line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + \
-        #         '\n' + FILL_TOKEN + '\n' + line['prompt'].split('<FILL_FUNCTION_BODY>')[1] + END_TOKEN for line in lines]
-        print(prompts[0])
+        # prompts = [f"{line['prompt']}\n" for line in lines]
+        prompts = [BEGIN_TOKEN + line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + \
+                '\n' + FILL_TOKEN + '\n' + line['prompt'].split('<FILL_FUNCTION_BODY>')[1] + END_TOKEN for line in lines]
+        # print(prompts[0])
         batches = self._get_batchs(prompts, self.batch_size)
         gen_text = []
         for batch in tqdm.tqdm(batches):
@@ -91,7 +91,7 @@ class CodeGen:
 
 
 if __name__ == '__main__':
-    file_path = 'prompt_full_context_hinny_function_level_completion_with_return_types.jsonl'
+    file_path = 'prompt_full_context_hinny_function_level_completion_with_return_types_20.jsonl'
     tiny_codegen = 'deepseek-ai/deepseek-coder-6.7b-base'
 
     cg = CodeGen(tiny_codegen, batch_size=1)
