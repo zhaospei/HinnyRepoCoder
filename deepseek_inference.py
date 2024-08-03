@@ -92,7 +92,7 @@ class CodeGen:
 
 
 if __name__ == '__main__':
-    file_path = 'prompt_no_em_type_method_SN_k20_t8000_lcontext_havepath.jsonl'
+    file_path = 'hinny-gt-one-gram-ws-20-ss-2-fix-fpath_8000.jsonl'
     tiny_codegen = 'deepseek-ai/deepseek-coder-6.7b-base'
 
     cg = CodeGen(tiny_codegen, batch_size=1)
