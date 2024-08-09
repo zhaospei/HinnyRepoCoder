@@ -71,9 +71,9 @@ class CodeGen:
         print(f'generating from {file}')
         lines = Tools.load_jsonl(file)
         # have a new line at the end
-        # prompts = [f"{line['prompt']}\n" for line in lines]
-        prompts = [BEGIN_TOKEN + line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + \
-                '\n' + FILL_TOKEN + '\n' + line['prompt'].split('<FILL_FUNCTION_BODY>')[1] + END_TOKEN for line in lines]
+        prompts = [f"{line['prompt']}\n" for line in lines]
+        # prompts = [BEGIN_TOKEN + line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + \
+        #         '\n' + FILL_TOKEN + '\n' + line['prompt'].split('<FILL_FUNCTION_BODY>')[1] + END_TOKEN for line in lines]
         # print(prompts[0])
         batches = self._get_batchs(prompts, self.batch_size)
         gen_text = []
