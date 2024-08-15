@@ -92,7 +92,7 @@ class CodeGen:
 
 
 if __name__ == '__main__':
-    file_path = 'defects4j_grounth_truth_no_em_type_method_fix.jsonl'
+    file_path = 'defects4j_ground_truth_no_em_type_method_lcontext.jsonl'
     tiny_codegen = 'deepseek-ai/deepseek-coder-6.7b-base'
 
     cg = CodeGen(tiny_codegen, batch_size=1)
