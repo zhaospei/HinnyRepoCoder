@@ -13,6 +13,11 @@ STARCODER_BEGIN_TOKEN = "<fim_prefix>"
 STARCODER_FILL_TOKEN = "<fim_suffix>"
 STARCODER_END_TOKEN = "<fim_middle>"
 
+GEMMA_BEGIN_TOKEN = "<|fim_prefix|>"
+GEMMA_FILL_TOKEN = "<|fim_suffix|>"
+GEMMA_END_TOKEN = "<|fim_middle|>"
+
+
 class Tools:
     @staticmethod
     def load_jsonl(path):
@@ -46,6 +51,10 @@ class CodeGen:
             self.begin_token = STARCODER_BEGIN_TOKEN
             self.fill_token = STARCODER_FILL_TOKEN
             self.end_token = STARCODER_END_TOKEN
+        elif 'gemma' in model_name:
+            self.begin_token = GEMMA_BEGIN_TOKEN
+            self.fill_token = GEMMA_FILL_TOKEN
+            self.end_token = GEMMA_END_TOKEN
         self.context = context
         self.batch_size = batch_size
         print('done loading model')
