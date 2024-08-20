@@ -71,6 +71,11 @@ class CodeGen:
         gen_tokens = self.model.generate(**prompts, max_new_tokens=max_new_tokens, do_sample=False)
         gen_text = self.tokenizer.batch_decode(gen_tokens, skip_special_tokens=True)
         
+        print(prompt_batch)
+        print(gen_text)
+        
+        print('----------------')
+        
         for i in range(len(gen_text)):  # remove the prompt
             gen_text[i] = gen_text[i][len(prompt_batch[i]):]
         
