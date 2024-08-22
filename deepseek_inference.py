@@ -17,6 +17,10 @@ GEMMA_BEGIN_TOKEN = "<|fim_prefix|>"
 GEMMA_FILL_TOKEN = "<|fim_suffix|>"
 GEMMA_END_TOKEN = "<|fim_middle|>"
 
+CODELLAMA_BEGIN_TOKEN = "▁<PRE>"
+CODELLAMA_FILL_TOKEN = "▁<SUF>"
+CODELLAMA_END_TOKEN = "▁▁<MID>"
+
 
 class Tools:
     @staticmethod
@@ -55,6 +59,10 @@ class CodeGen:
             self.begin_token = GEMMA_BEGIN_TOKEN
             self.fill_token = GEMMA_FILL_TOKEN
             self.end_token = GEMMA_END_TOKEN
+        elif 'llama' in model_name:
+            self.begin_token = CODELLAMA_BEGIN_TOKEN
+            self.fill_token = CODELLAMA_FILL_TOKEN
+            self.end_token = CODELLAMA_END_TOKEN
         self.context = context
         self.batch_size = batch_size
         print('done loading model')
@@ -138,7 +146,7 @@ def run(run_args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file_path', type=str, default='defects4j_sketch_type_method_no_em_lcontext_stable.jsonl')
+    parser.add_argument('--file_path', type=str, default='rambo_defects4j_sketch_prompt.jsonl')
     parser.add_argument('--model_id', type=str, default='deepseek-ai/deepseek-coder-6.7b-base')
     parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--context', type=str, default='lr_context')
