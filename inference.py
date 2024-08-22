@@ -98,6 +98,29 @@ def run(args):
             ]
         else:
             raise ValueError("Model not supported")
+    elif args.task == 'no_context':
+        if 'deepseek' in args.model_id:
+            sources = [
+                deepseek_build_infilling_prompt(line['metadata']['left_context'] + '<FILL_FUNCTION_BODY>' + line['metadata']['left_context'])
+                for line in dataset
+            ]
+        elif 'llama' in args.model_id:
+            sources = [
+                codellama_build_infilling_prompt(line['metadata']['left_context'] + '<FILL_FUNCTION_BODY>' + line['metadata']['left_context'])
+                for line in dataset
+            ]
+        elif 'gemma' in args.model_id:
+            sources = [
+                gemma_build_infilling_prompt(line['metadata']['left_context'] + '<FILL_FUNCTION_BODY>' + line['metadata']['left_context'])
+                for line in dataset
+            ]
+        elif 'star' in args.model_id:
+            sources = [
+                starcoder_build_infilling_prompt(line['metadata']['left_context'] + '<FILL_FUNCTION_BODY>' + line['metadata']['left_context'])
+                for line in dataset
+            ]
+        else:
+            raise ValueError("Model not supported")
     else:
         raise ValueError("Task not supported")
     
