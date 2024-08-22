@@ -56,7 +56,6 @@ def write_string_to_file(absolute_filename, string):
         fout.write(string)
 
 def run(args):
-    dataset_id = args.dataset_id
     model_id = args.model_id
 
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True, )

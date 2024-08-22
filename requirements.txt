@@ -1,3 +1,2 @@
 transformers==4.35.0
 accelerate
-huggingface-hub==0.24.0
