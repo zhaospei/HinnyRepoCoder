@@ -84,17 +84,17 @@ def run(args):
         elif 'llama' in args.model_id:
             sources = [
                 codellama_build_infilling_prompt(line['prompt'])
-                for line in dataset['prompt']
+                for line in dataset
             ]
         elif 'gemma' in args.model_id:
             sources = [
                 gemma_build_infilling_prompt(line['prompt'])
-                for line in dataset['prompt']
+                for line in dataset
             ]
         elif 'star' in args.model_id:
             sources = [
                 starcoder_build_infilling_prompt(line['prompt'])
-                for line in dataset['prompt']
+                for line in dataset
             ]
         else:
             raise ValueError("Model not supported")
