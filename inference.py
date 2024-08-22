@@ -74,7 +74,28 @@ def run(args):
     dataset = Tools.load_jsonl(args.input_file)
     
     if args.task == 'l_context':
-        sources = [f"{line['prompt']}\n" for line in dataset]
+        if 'deepseek' in args.model_id:
+            sources = [
+                deepseek_build_infilling_prompt(line['prompt'] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        elif 'llama' in args.model_id:
+            sources = [
+                codellama_build_infilling_prompt(line['prompt'] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        elif 'gemma' in args.model_id:
+            sources = [
+                gemma_build_infilling_prompt(line['prompt'] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        elif 'star' in args.model_id:
+            sources = [
+                starcoder_build_infilling_prompt(line['prompt'] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        else:
+            raise ValueError("Model not supported")
     elif args.task == 'lr_context':
         if 'deepseek' in args.model_id:
             sources = [
