@@ -25,26 +25,26 @@ class Tools:
                 f.write(json.dumps(line) + '\n')
 
 def deepseek_build_infilling_prompt(prompt: str):
-    prompt = prompt.replace('<FILL_FUNCTION_BODY>', FILL_TOKEN)
+    prompt = prompt.replace('<FILL_FUNCTION_BODY>', '\n' + FILL_TOKEN + '\n')
     return BEGIN_TOKEN + prompt + END_TOKEN
 
 def codellama_build_infilling_prompt(prompt):
     # prompt = prompt.replace('<FILL_FUNCTION_BODY>', '<FILL_ME>')
     # return prompt
     prefix_tokens, suffix_tokens = prompt.split('<FILL_FUNCTION_BODY>')
-    return '▁<PRE>' + prefix_tokens + '▁<SUF>' + suffix_tokens + '▁<MID>'
+    return '▁<PRE>' + prefix_tokens + '\n' + '▁<SUF>' + '\n' + suffix_tokens + '▁<MID>'
 
 def gemma_build_infilling_prompt(prompt):
     # prompt = prompt.replace('<FILL_FUNCTION_BODY>', '<FILL_ME>')
     # return prompt
     prefix_tokens, suffix_tokens = prompt.split('<FILL_FUNCTION_BODY>')
-    return '<|fim_prefix|>' + prefix_tokens + '<|fim_suffix|>' + suffix_tokens + '<|fim_middle|>'
+    return '<|fim_prefix|>' + prefix_tokens + '\n' + '<|fim_suffix|>' + '\n' + suffix_tokens + '<|fim_middle|>'
 
 def starcoder_build_infilling_prompt(prompt):
     # prompt = prompt.replace('<FILL_FUNCTION_BODY>', '<FILL_ME>')
     # return prompt
     prefix_tokens, suffix_tokens = prompt.split('<FILL_FUNCTION_BODY>')
-    return '<fim_prefix>' + prefix_tokens + '<fim_suffix>' + suffix_tokens + '<fim_middle>'
+    return '<fim_prefix>' + prefix_tokens + '\n' + '<fim_suffix>' + '\n' + suffix_tokens + '<fim_middle>'
 
 def split_batch(iterable, n=1):
     l = len(iterable)
@@ -78,23 +78,23 @@ def run(args):
     elif args.task == 'lr_context':
         if 'deepseek' in args.model_id:
             sources = [
-                deepseek_build_infilling_prompt(prompt)
-                for prompt in dataset['prompt']
+                deepseek_build_infilling_prompt(line['prompt'])
+                for line in dataset
             ]
         elif 'llama' in args.model_id:
             sources = [
-                codellama_build_infilling_prompt(prompt)
-                for prompt in dataset['prompt']
+                codellama_build_infilling_prompt(line['prompt'])
+                for line in dataset['prompt']
             ]
         elif 'gemma' in args.model_id:
             sources = [
-                gemma_build_infilling_prompt(prompt)
-                for prompt in dataset['prompt']
+                gemma_build_infilling_prompt(line['prompt'])
+                for line in dataset['prompt']
             ]
         elif 'star' in args.model_id:
             sources = [
-                starcoder_build_infilling_prompt(prompt)
-                for prompt in dataset['prompt']
+                starcoder_build_infilling_prompt(line['prompt'])
+                for line in dataset['prompt']
             ]
         else:
             raise ValueError("Model not supported")
