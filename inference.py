@@ -52,7 +52,7 @@ def split_batch(iterable, n=1):
         yield iterable[ndx:min(ndx + n, l)]
 
 def write_string_to_file(absolute_filename, string):
-    with open(absolute_filename, 'a') as fout:
+    with open(absolute_filename, 'a', encoding='utf-8') as fout:
         fout.write(string)
 
 def run(args):
@@ -164,15 +164,8 @@ def run(args):
             gen_text.extend(output)
 
             for idx, source in enumerate(batch):
-                # print(idx, source)
-                # write_string_to_file(args.output_file, output[idx][len(source):] + '<nl>')
-                # output[idx] = output[idx].encode('utf-8')
-                try:
-                    write_string_to_file(args.output_file, output[idx] + '<nl>')
-                except Exception as e:
-                    print(e)
-                    write_string_to_file(args.output_file, '<nl>')
-                # print(output[0][len(sources[0]):], output[1][len(sources[1]):])
+                write_string_to_file(args.output_file, output[idx] + '<nl>')
+              
             pbar.update(1)
     
     print(f'generated {len(gen_text)} samples')
@@ -189,7 +182,7 @@ def run(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--task", default='lr_context', type=str)
-    parser.add_argument("--batch_size", default=2, type=int,
+    parser.add_argument("--batch_size", default=1, type=int,
                         help="Batch size per GPU/CPU for training.")
     parser.add_argument("--load_in_8bit", action='store_true',
                         help="Load model 8 bit.")
