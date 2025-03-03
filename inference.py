@@ -155,7 +155,7 @@ def run(args):
             else:
                 model_inputs = tokenizer(batch, return_tensors="pt", padding='max_length', max_length=args.max_length, truncation=True).to("cuda")
             
-            generated_ids = model.generate(**model_inputs, max_new_tokens=args.max_new_tokens, pad_token_id=tokenizer.pad_token_id, eos_token_id=tokenizer.eos_token_id)
+            generated_ids = model.generate(**model_inputs, max_new_tokens=args.max_new_tokens, pad_token_id=tokenizer.pad_token_id, eos_token_id=tokenizer.eos_token_id, num_return_sequences=args.num_return_sequences)
 
             truncated_ids = [ids[len(model_inputs[idx]):] for idx, ids in enumerate(generated_ids)]
 
@@ -192,6 +192,7 @@ def main():
     parser.add_argument("--max_length", type=int, default=8000)
     parser.add_argument("--padding", type=str, default='longest')
     parser.add_argument("--max_new_tokens", type=int, default=400)
+    parser.add_argument("--num_return_sequences", type=int, default=1)
     args = parser.parse_args()
     run(args)
 
