@@ -25,8 +25,9 @@ class Tools:
                 f.write(json.dumps(line) + '\n')
 
 def deepseek_build_infilling_prompt(prompt: str):
-    prompt = prompt.replace('<FILL_FUNCTION_BODY>', '\n' + FILL_TOKEN + '\n')
-    return BEGIN_TOKEN + prompt + END_TOKEN
+    # prompt = prompt.replace('<FILL_FUNCTION_BODY>', '\n' + FILL_TOKEN + '\n')
+    prefix_tokens, suffix_tokens = prompt.split('<FILL_FUNCTION_BODY>')
+    return BEGIN_TOKEN + prefix_tokens + '\n' + FILL_TOKEN + '\n' + suffix_tokens + END_TOKEN
 
 def codellama_build_infilling_prompt(prompt):
     # prompt = prompt.replace('<FILL_FUNCTION_BODY>', '<FILL_ME>')
@@ -119,6 +120,29 @@ def run(args):
             ]
         else:
             raise ValueError("Model not supported")
+    elif args.task == 'lr_to_l_context':
+        if 'deepseek' in args.model_id:
+            sources = [
+                deepseek_build_infilling_prompt(line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        elif 'llama' in args.model_id:
+            sources = [
+                codellama_build_infilling_prompt(line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        elif 'gemma' in args.model_id:
+            sources = [
+                gemma_build_infilling_prompt(line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        elif 'star' in args.model_id:
+            sources = [
+                starcoder_build_infilling_prompt(line['prompt'].split('<FILL_FUNCTION_BODY>')[0] + '<FILL_FUNCTION_BODY>')
+                for line in dataset
+            ]
+        else:
+            raise ValueError("Model not supported")    
     elif args.task == 'no_context':
         if 'deepseek' in args.model_id:
             sources = [
