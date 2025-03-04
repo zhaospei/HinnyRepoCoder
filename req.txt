@@ -8,4 +8,4 @@ numpy
 scipy
 scikit-learn
 nltk
-accelerate
+accelerate==0.31.0
