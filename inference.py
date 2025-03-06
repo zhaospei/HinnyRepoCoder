@@ -3,6 +3,7 @@ import torch
 import argparse
 from tqdm import tqdm
 import json
+import copy
 # import logging
 # logging.disable(logging.WARNING)
 
@@ -196,11 +197,9 @@ def run(args):
     assert len(gen_text) == len(sources)
     new_lines = []
     for line, gen in zip(dataset, gen_text):
-        new_lines.append({
-            'prompt': line['prompt'],
-            'metadata': line['metadata'],
-            'choices': [{'text': gen}]
-        })
+        new_line = copy.deepcopy(line)
+        new_line['choices'] = [{'text': gen}]
+        new_lines.append(new_line)
     Tools.dump_jsonl(new_lines, args.input_file.replace('.jsonl', f'_{args.model_id.split("/")[-1]}.jsonl'))
     
 def main():
